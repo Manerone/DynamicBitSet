@@ -4,25 +4,42 @@
 #include "string.h"
 #include <math.h>
 
-#define min_element_size uint64_t
-
-DynamicBitSet::DynamicBitSet(uint32_t n_of_bits) {
-    bitset_size = determineBitsetSize(n_of_bits);
+DynamicBitSet::DynamicBitSet(uint64_t n_of_bits) {
+    bitset_size = ceil(n_of_bits / (double)min_element_size_bits());
+    n_of_bits = n_of_bits;
     bitset = new min_element_size[bitset_size];
     memset(bitset, 0, bitset_size * min_element_size_bits()/8);
 }
 
-void DynamicBitSet::setBitToOne(uint32_t bit) {
+void DynamicBitSet::setBitToOne(uint64_t bit) {
     bitset[elementPositionInBitset(bit)] |= (1 << (bit % min_element_size_bits()));
 }
 
-void DynamicBitSet::setBitToZero(uint32_t bit) {
+void DynamicBitSet::setBitToZero(uint64_t bit) {
     bitset[elementPositionInBitset(bit)] |= ~(1 << (bit % min_element_size_bits()));
 }
 
-bool DynamicBitSet::readBit(uint32_t bit) {
+bool DynamicBitSet::readBit(uint64_t bit) {
     min_element_size value = bitset[elementPositionInBitset(bit)];
     return (min_element_size) 1 & (value >> (bit % min_element_size_bits()));
+}
+
+DynamicBitSet DynamicBitSet::intersection(DynamicBitSet b2){
+    DynamicBitSet result = DynamicBitSet(n_of_bits);
+
+    for(size_t i = 0; i < bitset_size; ++i){
+        result.bitset[i] = this->bitset[i] & b2.bitset[i];
+    }
+
+    return result;
+}
+
+DynamicBitSet DynamicBitSet::intersection_on_self(DynamicBitSet b2){
+    for(size_t i = 0; i < bitset_size; ++i){
+        this->bitset[i] = this->bitset[i] & b2.bitset[i];
+    }
+
+    return *this;
 }
 
 void DynamicBitSet::print(){
@@ -37,14 +54,10 @@ void DynamicBitSet::print(){
     
 }
 
-uint32_t DynamicBitSet::elementPositionInBitset(uint32_t bit_position) {
-    return ceil((double)bit_position / min_element_size_bits());
+inline uint64_t DynamicBitSet::elementPositionInBitset(uint64_t bit_position) {
+    return bit_position / min_element_size_bits();
 }
 
-uint32_t DynamicBitSet::determineBitsetSize(uint32_t n_of_bits){
-    return ceil((double)n_of_bits / min_element_size_bits());
-}
-
-uint64_t DynamicBitSet::min_element_size_bits(){
+inline uint64_t DynamicBitSet::min_element_size_bits(){
     return sizeof(min_element_size)*8;
 }
