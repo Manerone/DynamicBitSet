@@ -6,20 +6,20 @@
 
 using namespace std;
 
+#define N_BITS 128
+
 int main(){
 
-    DynamicBitSet bitset = DynamicBitSet(10);
+    DynamicBitSet bitset = DynamicBitSet(N_BITS);
 
-    cout << bitset.readBit(65) << '\n';
+    bitset.print();
 
-    bitset.setBitToOne(65);
+    for(size_t i = 0; i < N_BITS; i++)
+    {
+        bitset.setBitToOne(i);
+    }
 
-    cout << bitset.readBit(65) << '\n';
-
-    bitset.setBitToOne(66);
-
-    cout << bitset.readBit(66) << '\n';
-    cout << bitset.readBit(65) << '\n';
+    bitset.print();
 
     return 1;
 }
