@@ -24,7 +24,7 @@ DynamicBitSet test_dynamic_bitset(){
     start = chrono::high_resolution_clock::now();
     for(size_t i = 0; i < N_BITS; i += 3)
     {
-        bitset.setBitToOne(i);
+        DynamicBitSet::setBitToOne(bitset, i);
     }
     end = chrono::high_resolution_clock::now();
 
@@ -36,7 +36,7 @@ DynamicBitSet test_dynamic_bitset(){
 
     for(size_t i = 0; i < N_BITS; i += 2)
     {
-        bitset2.setBitToOne(i);
+        DynamicBitSet::setBitToOne(bitset2, i);
     }
 
     end = chrono::high_resolution_clock::now();
@@ -47,7 +47,7 @@ DynamicBitSet test_dynamic_bitset(){
 
     start = chrono::high_resolution_clock::now();
 
-    bitset.intersection_on_self(bitset2);
+    DynamicBitSet::intersection_on_self(bitset, bitset2);
 
     end = chrono::high_resolution_clock::now();
 
@@ -131,7 +131,7 @@ int main(){
 
     for(size_t i = 0; i < N_BITS; i++)
     {
-        if(a.readBit(i) != b.at(i)){
+        if(DynamicBitSet::readBit(a, i) != b.at(i)){
             printf("Wrong value\n");
             return -1;
         }

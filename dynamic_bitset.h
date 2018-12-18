@@ -18,15 +18,15 @@ private:
 public:
     DynamicBitSet(uint64_t n_of_bits);
 
-    void setBitToOne(uint64_t bit);
-    void setBitToZero(uint64_t bit);
+    static void setBitToOne(DynamicBitSet bitset, uint64_t bit);
+    static void setBitToZero(DynamicBitSet bitset, uint64_t bit);
 
-    bool readBit(uint64_t bit);
+    static bool readBit(DynamicBitSet bitset, uint64_t bit);
 
-    DynamicBitSet intersection(DynamicBitSet bitset);
-    void intersection_on_self(DynamicBitSet bitset);
+    static DynamicBitSet intersection(DynamicBitSet bitset, DynamicBitSet b2);
+    static void intersection_on_self(DynamicBitSet bitset, DynamicBitSet b2);
 
-    void print();
+    static void print(DynamicBitSet bitset);
 };
 
 #endif

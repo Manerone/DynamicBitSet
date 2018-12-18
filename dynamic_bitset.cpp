@@ -11,42 +11,42 @@ DynamicBitSet::DynamicBitSet(uint64_t n_of_bits) {
     memset(bitset, 0, bitset_size * min_element_size_bits()/8);
 }
 
-void DynamicBitSet::setBitToOne(uint64_t bit) {
-    bitset[bit / min_element_size_bits()] |= (1 << (bit % min_element_size_bits()));
+void DynamicBitSet::setBitToOne(DynamicBitSet bitset, uint64_t bit) {
+    bitset.bitset[bit / bitset.min_element_size_bits()] |= (1 << (bit % bitset.min_element_size_bits()));
 }
 
-void DynamicBitSet::setBitToZero(uint64_t bit) {
-    bitset[bit / min_element_size_bits()] &= ~(1 << (bit % min_element_size_bits()));
+void DynamicBitSet::setBitToZero(DynamicBitSet bitset, uint64_t bit) {
+    bitset.bitset[bit / bitset.min_element_size_bits()] &= ~(1 << (bit % bitset.min_element_size_bits()));
 }
 
-bool DynamicBitSet::readBit(uint64_t bit) {
-    min_element_size value = bitset[bit / min_element_size_bits()];
-    return (min_element_size) 1 & (value >> (bit % min_element_size_bits()));
+bool DynamicBitSet::readBit(DynamicBitSet bitset, uint64_t bit) {
+    min_element_size value = bitset.bitset[bit / bitset.min_element_size_bits()];
+    return (min_element_size) 1 & (value >> (bit % bitset.min_element_size_bits()));
 }
 
-DynamicBitSet DynamicBitSet::intersection(DynamicBitSet b2){
-    DynamicBitSet result = DynamicBitSet(n_of_bits);
+DynamicBitSet DynamicBitSet::intersection(DynamicBitSet bitset, DynamicBitSet b2){
+    DynamicBitSet result = DynamicBitSet(bitset.n_of_bits);
 
-    for(size_t i = 0; i < bitset_size; ++i){
-        result.bitset[i] = this->bitset[i] & b2.bitset[i];
+    for(size_t i = 0; i < bitset.bitset_size; ++i){
+        result.bitset[i] = bitset.bitset[i] & b2.bitset[i];
     }
 
     return result;
 }
 
-void DynamicBitSet::intersection_on_self(DynamicBitSet b2){
-    for(size_t i = 0; i < bitset_size; ++i){
-        this->bitset[i] = this->bitset[i] & b2.bitset[i];
+void DynamicBitSet::intersection_on_self(DynamicBitSet bitset, DynamicBitSet b2){
+    for(size_t i = 0; i < bitset.bitset_size; ++i){
+        bitset.bitset[i] = bitset.bitset[i] & b2.bitset[i];
     }
 }
 
-void DynamicBitSet::print(){
+void DynamicBitSet::print(DynamicBitSet bitset){
 
-    for(size_t i = 0; i < bitset_size * min_element_size_bits(); i++)
+    for(size_t i = 0; i < bitset.bitset_size * bitset.min_element_size_bits(); i++)
     {
-        if(i % min_element_size_bits() == 0)
+        if(i % bitset.min_element_size_bits() == 0)
             printf("|");
-        printf("%d", readBit(i));
+        printf("%d", DynamicBitSet::readBit(bitset, i));
     }
     printf("\n");
 
