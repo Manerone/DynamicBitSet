@@ -16,7 +16,7 @@ void DynamicBitSet::setBitToOne(uint64_t bit) {
 }
 
 void DynamicBitSet::setBitToZero(uint64_t bit) {
-    bitset[elementPositionInBitset(bit)] |= ~(1 << (bit % min_element_size_bits()));
+    bitset[elementPositionInBitset(bit)] &= ~(1 << (bit % min_element_size_bits()));
 }
 
 bool DynamicBitSet::readBit(uint64_t bit) {
@@ -43,7 +43,7 @@ DynamicBitSet DynamicBitSet::intersection_on_self(DynamicBitSet b2){
 }
 
 void DynamicBitSet::print(){
-    
+
     for(size_t i = 0; i < bitset_size * min_element_size_bits(); i++)
     {
         if(i % min_element_size_bits() == 0)
@@ -51,7 +51,7 @@ void DynamicBitSet::print(){
         printf("%d", readBit(i));
     }
     printf("\n");
-    
+
 }
 
 inline uint64_t DynamicBitSet::elementPositionInBitset(uint64_t bit_position) {
