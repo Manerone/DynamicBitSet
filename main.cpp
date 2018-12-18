@@ -11,45 +11,101 @@ using namespace std;
 #define N_BITS 4294967296
 
 DynamicBitSet test_dynamic_bitset(){
+    chrono::high_resolution_clock::time_point start, end;
+
+    start = chrono::high_resolution_clock::now();
     DynamicBitSet bitset = DynamicBitSet(N_BITS);
     DynamicBitSet bitset2 = DynamicBitSet(N_BITS);
+    end = chrono::high_resolution_clock::now();
 
+    auto d0 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+    cout << "Dynamic bitset - initialize: " << d0/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
     for(size_t i = 0; i < N_BITS; i += 3)
     {
         bitset.setBitToOne(i);
     }
+    end = chrono::high_resolution_clock::now();
+
+    auto d1 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Dynamic bitset - first bitset: " << d1/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
 
     for(size_t i = 0; i < N_BITS; i += 2)
     {
         bitset2.setBitToOne(i);
     }
 
+    end = chrono::high_resolution_clock::now();
+
+    auto d2 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Dynamic bitset - second bitset: " << d2/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
+
     bitset.intersection_on_self(bitset2);
+
+    end = chrono::high_resolution_clock::now();
+
+    auto d3 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Dynamic bitset - intersection: " << d3/1000000.0 << "\n";
 
     return bitset;
 }
 
 vector<bool> test_vector_bool(){
-    vector<bool> bitset(N_BITS);
-    vector<bool> bitset2(N_BITS);;
 
+    chrono::high_resolution_clock::time_point start, end;
+
+    start = chrono::high_resolution_clock::now();
+    vector<bool> bitset(N_BITS);
+    vector<bool> bitset2(N_BITS);
+    end = chrono::high_resolution_clock::now();
+
+    auto d0 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+    cout << "Vector Bool - initialize: " << d0/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
     for(size_t i = 0; i < N_BITS; i += 3)
     {
         bitset.at(i) = 1;
     }
+    end = chrono::high_resolution_clock::now();
+
+    auto d1 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Vector Bool - first bitset: " << d1/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
 
     for(size_t i = 0; i < N_BITS; i += 2)
     {
         bitset2.at(i) = 1;
     }
 
+    end = chrono::high_resolution_clock::now();
 
+    auto d2 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Vector Bool - second bitset: " << d2/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
 
     for(size_t i = 0; i < N_BITS; i++)
     {
         bitset.at(i) = bitset.at(i) && bitset2.at(i);
     }
 
+    end = chrono::high_resolution_clock::now();
+
+    auto d3 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Vector Bool - intersection: " << d3/1000000.0 << "\n";
 
     return bitset;
 }
