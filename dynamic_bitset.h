@@ -7,14 +7,12 @@
 class DynamicBitSet {
 private:
 
-    typedef uint8_t min_element_size;
+    typedef uint64_t min_element_size;
 
     min_element_size *bitset;
     uint64_t bitset_size;
     uint64_t n_of_bits;
 
-    uint64_t elementPositionInBitset(uint64_t bit_position);
-    uint64_t determineBitsetSize(uint64_t n_of_bits);
     uint64_t min_element_size_bits();
 
 public:
