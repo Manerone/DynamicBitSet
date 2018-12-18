@@ -9,7 +9,6 @@
 using namespace std;
 
 #define N_BITS 4294967296
-// #define N_BITS 1000000
 
 DynamicBitSet test_dynamic_bitset(){
     DynamicBitSet bitset = DynamicBitSet(N_BITS);
@@ -66,9 +65,13 @@ int main(){
     vector<bool> b = test_vector_bool();
     chrono::high_resolution_clock::time_point t4 = chrono::high_resolution_clock::now();
 
-    cout << "Dynamic bitset: " << chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count() << "\n";
+    auto d1 = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
-    cout << "Vector bool: " << chrono::duration_cast<chrono::microseconds>( t4 - t3 ).count() << "\n";
+    auto d2 = chrono::duration_cast<chrono::microseconds>( t4 - t3 ).count();
+
+    cout << "Dynamic bitset: " << d1/1000000.0 << "\n";
+
+    cout << "Vector bool: " << d2/1000000.0 << "\n";
 
     for(size_t i = 0; i < N_BITS; i++)
     {
