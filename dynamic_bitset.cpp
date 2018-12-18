@@ -34,12 +34,10 @@ DynamicBitSet DynamicBitSet::intersection(DynamicBitSet b2){
     return result;
 }
 
-DynamicBitSet DynamicBitSet::intersection_on_self(DynamicBitSet b2){
+void DynamicBitSet::intersection_on_self(DynamicBitSet b2){
     for(size_t i = 0; i < bitset_size; ++i){
         this->bitset[i] = this->bitset[i] & b2.bitset[i];
     }
-
-    return *this;
 }
 
 void DynamicBitSet::print(){

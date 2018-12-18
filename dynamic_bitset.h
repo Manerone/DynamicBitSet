@@ -26,7 +26,7 @@ public:
     bool readBit(uint64_t bit);
 
     DynamicBitSet intersection(DynamicBitSet bitset);
-    DynamicBitSet intersection_on_self(DynamicBitSet bitset);
+    void intersection_on_self(DynamicBitSet bitset);
 
     void print();
 };
