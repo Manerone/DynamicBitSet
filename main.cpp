@@ -5,10 +5,59 @@
 #include "dynamic_bitset.h"
 #include <vector>
 #include <chrono>
+#include <boost/dynamic_bitset.hpp>
 
 using namespace std;
 
 #define N_BITS 4294967296
+
+boost::dynamic_bitset<> test_boost(){
+    chrono::high_resolution_clock::time_point start, end;
+
+    start = chrono::high_resolution_clock::now();
+    boost::dynamic_bitset<> bitset(N_BITS);
+    boost::dynamic_bitset<> bitset2(N_BITS);
+    end = chrono::high_resolution_clock::now();
+
+    auto d0 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+    cout << "Boost - initialize: " << d0/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
+    for(uint64_t i = 0; i < N_BITS; i += 3)
+    {
+        bitset[i] = 1;
+    }
+    end = chrono::high_resolution_clock::now();
+
+    auto d1 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Boost - first bitset: " << d1/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    for(uint64_t i = 0; i < N_BITS; i += 2)
+    {
+        bitset2[i] = 1;
+    }
+
+    end = chrono::high_resolution_clock::now();
+
+    auto d2 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Boost - second bitset: " << d2/1000000.0 << "\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    bitset &= bitset2;
+
+    end = chrono::high_resolution_clock::now();
+
+    auto d3 = chrono::duration_cast<chrono::microseconds>( end - start ).count();
+
+    cout << "Boost - intersection: " << d3/1000000.0 << "\n";
+
+    return bitset;
+}
 
 DynamicBitSet test_dynamic_bitset(){
     chrono::high_resolution_clock::time_point start, end;
@@ -22,7 +71,7 @@ DynamicBitSet test_dynamic_bitset(){
     cout << "Dynamic bitset - initialize: " << d0/1000000.0 << "\n";
 
     start = chrono::high_resolution_clock::now();
-    for(size_t i = 0; i < N_BITS; i += 3)
+    for(uint64_t i = 0; i < N_BITS; i += 3)
     {
         bitset.setBitToOne(i);
     }
@@ -34,7 +83,7 @@ DynamicBitSet test_dynamic_bitset(){
 
     start = chrono::high_resolution_clock::now();
 
-    for(size_t i = 0; i < N_BITS; i += 2)
+    for(uint64_t i = 0; i < N_BITS; i += 2)
     {
         bitset2.setBitToOne(i);
     }
@@ -71,7 +120,7 @@ vector<bool> test_vector_bool(){
     cout << "Vector Bool - initialize: " << d0/1000000.0 << "\n";
 
     start = chrono::high_resolution_clock::now();
-    for(size_t i = 0; i < N_BITS; i += 3)
+    for(uint64_t i = 0; i < N_BITS; i += 3)
     {
         bitset.at(i) = 1;
     }
@@ -83,7 +132,7 @@ vector<bool> test_vector_bool(){
 
     start = chrono::high_resolution_clock::now();
 
-    for(size_t i = 0; i < N_BITS; i += 2)
+    for(uint64_t i = 0; i < N_BITS; i += 2)
     {
         bitset2.at(i) = 1;
     }
@@ -96,7 +145,7 @@ vector<bool> test_vector_bool(){
 
     start = chrono::high_resolution_clock::now();
 
-    for(size_t i = 0; i < N_BITS; i++)
+    for(uint64_t i = 0; i < N_BITS; i++)
     {
         bitset.at(i) = bitset.at(i) && bitset2.at(i);
     }
@@ -112,7 +161,6 @@ vector<bool> test_vector_bool(){
 
 int main(){
 
-
     chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
     DynamicBitSet a = test_dynamic_bitset();
     chrono::high_resolution_clock::time_point t2 = chrono::high_resolution_clock::now();
@@ -121,18 +169,26 @@ int main(){
     vector<bool> b = test_vector_bool();
     chrono::high_resolution_clock::time_point t4 = chrono::high_resolution_clock::now();
 
+    chrono::high_resolution_clock::time_point t5 = chrono::high_resolution_clock::now();
+    boost::dynamic_bitset<> c = test_boost();
+    chrono::high_resolution_clock::time_point t6 = chrono::high_resolution_clock::now();
+
     auto d1 = chrono::duration_cast<chrono::microseconds>( t2 - t1 ).count();
 
     auto d2 = chrono::duration_cast<chrono::microseconds>( t4 - t3 ).count();
+
+    auto d3 = chrono::duration_cast<chrono::microseconds>( t6 - t5 ).count();
 
     cout << "Dynamic bitset: " << d1/1000000.0 << "\n";
 
     cout << "Vector bool: " << d2/1000000.0 << "\n";
 
-    for(size_t i = 0; i < N_BITS; i++)
+    cout << "Boost bitset: " << d3/1000000.0 << "\n";
+
+    for(uint64_t i = 0; i < N_BITS; i++)
     {
-        if(a.readBit(i) != b.at(i)){
-            printf("Wrong value\n");
+        if(a.readBit(i) != b.at(i) || (a.readBit(i) != c[i])){
+            printf("Wrong value, %llu\n", i);
             return -1;
         }
     }
